@@ -26,10 +26,10 @@ public class JwtService {
         this.expirationMs = expirationMs;
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String email) {
         Instant now = Instant.now();
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(email)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(now.plusMillis(expirationMs)))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -39,25 +39,5 @@ public class JwtService {
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        return userDetails.getUsername().equals(getUsernameFromToken(token)) && !isTokenExpired(token);
-    }
-
-    public boolean isTokenExpired(String token) {
-        return getClaims(token).getExpiration().before(Date.from(Instant.now()));
-    }
-
-    public String getUsernameFromToken(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
     }
 }

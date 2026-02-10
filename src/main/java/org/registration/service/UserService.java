@@ -34,6 +34,7 @@ public class UserService {
                 .modified(LocalDateTime.now())
                 .lastLogin(LocalDateTime.now())
                 .isActive(true)
+                .token(jwtService.generateToken(registerRequest.email()))
                 .phones(registerRequest.phones().stream()
                         .map(phoneRequest -> Phone.builder()
                                 .number(phoneRequest.number())
@@ -43,8 +44,6 @@ public class UserService {
                         .toList())
                 .build();
 
-        String token = jwtService.generateToken(user);
-        user.setToken(token);
         userRepository.save(user);
 
         return new CommonResponse(user.getId(),
