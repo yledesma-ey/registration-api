@@ -37,8 +37,8 @@ public class UserService {
                 .phones(registerRequest.phones().stream()
                         .map(phoneRequest -> Phone.builder()
                                 .number(phoneRequest.number())
-                                .cityCode(phoneRequest.cityCode())
-                                .countryCode(phoneRequest.countryCode())
+                                .citycode(phoneRequest.citycode())
+                                .countrycode(phoneRequest.countrycode())
                                 .build())
                         .toList())
                 .build();

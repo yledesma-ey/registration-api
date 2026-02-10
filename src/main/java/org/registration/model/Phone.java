@@ -17,8 +17,8 @@ public class Phone {
     
     private String number;
 
-    private String cityCode;
+    private String citycode;
 
-    private String countryCode;
+    private String countrycode;
 
 }
