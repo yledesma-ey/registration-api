@@ -1,13 +1,15 @@
 package org.registration.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "phones")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Phone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
