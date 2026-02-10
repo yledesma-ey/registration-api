@@ -14,14 +14,15 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public CommonResponse register(RegisterRequest registerRequest) {
         User user = User.builder()
-                .id(UUID.randomUUID())
                 .name(registerRequest.name())
                 .email(registerRequest.email())
                 .password(registerRequest.password())
@@ -38,6 +39,8 @@ public class UserService {
                         .toList())
                 .build();
 
+        String token = jwtService.generateToken(user);
+        user.setToken(token);
         userRepository.save(user);
 
         return new CommonResponse(user.getId(),

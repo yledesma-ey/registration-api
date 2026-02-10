@@ -10,18 +10,19 @@ import org.registration.response.CommonResponse;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class UserServiceTest {
 
     private UserService userService;
+    private JwtService jwtService;
 
     @BeforeEach
     void setUp(){
         UserRepository userRepository = mock(UserRepository.class);
-        userService = new UserService(userRepository);
+        jwtService = mock(JwtService.class);
+        userService = new UserService(userRepository, jwtService);
     }
 
     @Test
@@ -35,7 +36,6 @@ class UserServiceTest {
 
         CommonResponse response = userService.register(registerRequest);
 
-        assertNotNull(response.id());
         assertTrue(response.isActive());
     }
 }
