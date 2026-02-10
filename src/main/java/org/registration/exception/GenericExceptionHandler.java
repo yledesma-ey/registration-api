@@ -11,6 +11,6 @@ public class GenericExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("El correo ya esta registrado"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
 }

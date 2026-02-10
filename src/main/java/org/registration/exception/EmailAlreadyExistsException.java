@@ -1,7 +1,7 @@
 package org.registration.exception;
 
 public class EmailAlreadyExistsException extends RuntimeException{
-    public EmailAlreadyExistsException() {
-        super("El correo ya esta registrado");
+    public EmailAlreadyExistsException(String message) {
+        super(message);
     }
 }

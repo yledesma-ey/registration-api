@@ -23,7 +23,7 @@ public class UserService {
 
     public CommonResponse register(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.email()).isPresent()) {
-            throw new EmailAlreadyExistsException();
+            throw new EmailAlreadyExistsException("El correo ya registrado: " + registerRequest.email());
         }
 
         User user = User.builder()
