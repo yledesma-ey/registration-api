@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class BusinessServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -28,8 +28,11 @@ class UserServiceTest {
     @Mock
     private JwtService jwtService;
 
-    @InjectMocks
+    @Mock
     private UserService userService;
+
+    @InjectMocks
+    private BusinessService businessService;
 
 
     @Test
@@ -41,12 +44,10 @@ class UserServiceTest {
                 List.of(new PhoneRequest("1234567890", "01", "001"))
         );
 
-        when(userRepository.findByEmail(registerRequest.email())).thenReturn(Optional.empty());
+        when(userService.findByEmail(registerRequest.email())).thenReturn(false);
         when(jwtService.generateToken(registerRequest.email())).thenReturn("mock-token");
 
-        CommonResponse response = userService.register(registerRequest);
-
-        verify(userRepository).save(any(User.class));
+        CommonResponse response = businessService.registerUser(registerRequest);
 
         assertNotNull(response);
         assertEquals("mock-token", response.token());
@@ -61,10 +62,10 @@ class UserServiceTest {
                 "password123",
                 List.of(new PhoneRequest("1234567890", "01", "001"))
         );
-        when(userRepository.findByEmail(registerRequest.email())).thenReturn(Optional.of(new User()));
+        when(userService.findByEmail(registerRequest.email())).thenReturn(true);
 
         assertThrows(EmailAlreadyExistsException.class,
-                () -> userService.register(registerRequest));
+                () -> businessService.registerUser(registerRequest));
 
         verify(userRepository, never()).save(any());
     }

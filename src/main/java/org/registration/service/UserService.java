@@ -14,43 +14,18 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, JwtService jwtService) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.jwtService = jwtService;
     }
 
-    public CommonResponse register(RegisterRequest registerRequest) {
-        if (userRepository.findByEmail(registerRequest.email()).isPresent()) {
-            throw new EmailAlreadyExistsException("El correo ya registrado: " + registerRequest.email());
-        }
-
-        User user = User.builder()
-                .name(registerRequest.name())
-                .email(registerRequest.email())
-                .password(registerRequest.password())
-                .created(LocalDateTime.now())
-                .modified(LocalDateTime.now())
-                .lastLogin(LocalDateTime.now())
-                .isActive(true)
-                .token(jwtService.generateToken(registerRequest.email()))
-                .phones(registerRequest.phones().stream()
-                        .map(phoneRequest -> Phone.builder()
-                                .number(phoneRequest.number())
-                                .citycode(phoneRequest.citycode())
-                                .countrycode(phoneRequest.countrycode())
-                                .build())
-                        .toList())
-                .build();
-
-        userRepository.save(user);
-
-        return new CommonResponse(user.getId(),
-                user.getCreated(),
-                user.getModified(),
-                user.getLastLogin(),
-                user.getToken(),
-                user.getIsActive());
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
+
+    public Boolean findByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+
 }
